@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+// import { Push, PushObject, PushOptions } from '@ionic-native/push/ngx';
+
 
 @Component({
   selector: 'app-home',
@@ -6,7 +8,6 @@ import { Component } from '@angular/core';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-
-  constructor() {}
-
+  constructor() { 
+  }
 }
