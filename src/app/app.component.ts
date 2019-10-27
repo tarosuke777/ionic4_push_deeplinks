@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { HomePage } from './home/home.page';
-
 
 @Component({
   selector: 'app-root',
@@ -23,7 +22,9 @@ export class AppComponent {
     private push: Push,
     private router: Router,
     private navCtrl: NavController,
-    private deeplinks: Deeplinks  ) {
+    private deeplinks: Deeplinks,
+    private zone: NgZone
+    ) {
     this.initializeApp();
   }
 
@@ -42,7 +43,9 @@ export class AppComponent {
         // match.$link - the full link data
         console.log('Successfully matched route', match);
         // this.router.navigateByUrl(match.$link.path);
-        this.router.navigateByUrl(match.$route);
+        this.zone.run(() => {
+          this.router.navigateByUrl(match.$route);
+        });
       }, nomatch => {
         // nomatch.$link - the full link data
         console.error('Got a deeplink that didn\'t match', nomatch);
@@ -83,7 +86,7 @@ export class AppComponent {
         console.log(notification);
         const dataStr = JSON.stringify(notification.additionalData);
         JSON.parse(dataStr, (key, value) => {
-          if(key === "pinpoint.deeplink") {
+          if(key === "pinpoint.url") {
             console.log("key:" +  key);
             console.log("value:" + value);
             
@@ -114,7 +117,9 @@ export class AppComponent {
             var routeParts = restOfUrl.split('/');
             console.log("routeParts[0]:" + routeParts[0]);
             console.log("routeParts[1]:" + routeParts[1]);
-            this.router.navigateByUrl(routeParts[1]);
+            this.zone.run(() => {
+              this.router.navigateByUrl(routeParts[1]);
+            });
 
           }
 
